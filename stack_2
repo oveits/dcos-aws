@@ -5,8 +5,9 @@ TEMPLATE_URL=https://s3-us-west-2.amazonaws.com/downloads.dcos.io/dcos/EarlyAcce
 SSH_KEY=AWS_SSH_Key
 
 up() {
+       #--template-body file://d/veits/Vagrant/dcos-aws/template_master\=1_PlublicSlaveInstanceCount\=1_SlaveInstanceCount\=5_SlaveInstanceCountDesired\=2.txt \
    aws --region us-west-2 cloudformation create-stack --stack-name dcos-demo \
-       --template-url ${TEMPLATE_URL} \
+       --template-body file://./template_master\=1_PlublicSlaveInstanceCount\=1_SlaveInstanceCount\=5_SlaveInstanceCountDesired\=2.txt \
        --parameters ParameterKey=AcceptEULA,ParameterValue="Yes",ParameterKey=KeyName,ParameterValue="AWS_SSH_Key" \
        --capabilities CAPABILITY_IAM
 }

@@ -3201,7 +3201,7 @@
                         ]
                     },
                     "Count": {
-                        "Ref": "SlaveInstanceCountDesired"
+                        "Ref": "SlaveInstanceCount"
                     }
                 }
             },
@@ -3210,10 +3210,10 @@
                     "Ref": "SlaveInstanceCount"
                 },
                 "DesiredCapacity": {
-                    "Ref": "SlaveInstanceCountDesired"
+                    "Ref": "SlaveInstanceCount"
                 },
                 "MinSize": {
-                    "Ref": "SlaveInstanceCountDesired"
+                    "Ref": "SlaveInstanceCount"
                 },
                 "VPCZoneIdentifier": [
                     {
@@ -3255,11 +3255,6 @@
         "SlaveInstanceCount": {
             "Description": "Required: Specify the number of private agent nodes or accept the default.",
             "Default": "5",
-            "Type": "Number"
-        },
-        "SlaveInstanceCountDesired": {
-            "Description": "Required: Specify the number of private agent nodes or accept the default.",
-            "Default": "2",
             "Type": "Number"
         },
         "PublicSlaveInstanceCount": {

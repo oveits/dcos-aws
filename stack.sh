@@ -1,8 +1,14 @@
 #!/bin/sh
 
-TEMPLATE_URL='https://s3.amazonaws.com/my-us-west-2-bucket/template_master=1_PlublicSlaveInstanceCount=1_SlaveInstanceCount=5_SlaveInstanceCountDesired=2.txt'
-#SSH_KEY=dcos-demo-key
-SSH_KEY=AWS_SSH_Key
+if [ "$TEMPLATE_URL" == "" ]; then
+  echo "Please set TEMPLATE_URL first (e.g. export TEMPLATE_URL='https://s3.amazonaws.com/my-us-west-2-bucket/CloudFormationTemplate')"
+  exit 1
+fi
+
+if [ "$SSH_KEY" == "" ]; then
+  echo "Please set SSH_KEY first (e.g. export SSH_KEY=AWS_SSH_Key)"
+  exit 1
+fi
 
 up() {
    aws --region us-west-2 cloudformation create-stack --stack-name dcos-demo \

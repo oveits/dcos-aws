@@ -1,0 +1,8 @@
+MasterInstanceType: m3.xlarge
+SlaveInstanceType: m3.xlarge
+PublicSlaveInstanceType: m3.xlarge
+NATInstanceType: m3.medium
+
+PublicSlaveInstanceCount: 1
+SlaveInstanceCountDesired: 2
+SlaveInstanceCount: 2

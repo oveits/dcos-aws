@@ -1,0 +1,8 @@
+MasterInstanceType: t2.micro
+SlaveInstanceType: t2.micro
+PublicSlaveInstanceType: t2.micro
+NATInstanceType: t2.micro
+
+PublicSlaveInstanceCount: 1
+SlaveInstanceCountDesired: 1
+SlaveInstanceCount: 1

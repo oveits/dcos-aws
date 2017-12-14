@@ -6,3 +6,5 @@ NATInstanceType: m3.medium
 PublicSlaveInstanceCount: 1
 SlaveInstanceCountDesired: 2
 SlaveInstanceCount: 2
+MasterEbsOptimized: true
+SlaveEbsOptimized: true

@@ -34,7 +34,7 @@
                 "stable": "ami-27cc7d44"
             },
             "us-west-2": {
-                "stable": "ami-2551d145"
+                "stable": "ami-444dcd24"
             }
         },
         "Parameters": {
@@ -164,7 +164,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "{{MasterEbsOptimized}}",
                 "IamInstanceProfile": {
                     "Ref": "MasterInstanceProfile"
                 },
@@ -708,7 +708,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "{{SlaveEbsOptimized}}",
                 "IamInstanceProfile": {
                     "Ref": "SlaveInstanceProfile"
                 },

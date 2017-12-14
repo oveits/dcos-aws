@@ -5,4 +5,6 @@ NATInstanceType: t2.micro
 
 PublicSlaveInstanceCount: 1
 SlaveInstanceCountDesired: 1
-SlaveInstanceCount: 1
+SlaveInstanceCount: 2
+MasterEbsOptimized: false
+SlaveEbsOptimized: false

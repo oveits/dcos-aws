@@ -18,17 +18,22 @@ The user used for the tasks in this README will need following access rights:
 - AWSCloudFormationReadOnlyAccess
 - CloudFormation (managed)
 
-The rights can be added on the [US West 2 AWS Console](https://console.aws.amazon.com/iam/home?region=us-west-2). The first three access rights can be assigned by searching and attaching the rights to the user. The CloudFormation managed policy is a little more tricky. The process is described in steps 4.2 and 4.3 of my blog on (https://oliverveits.wordpress.com/2017/11/21/installing-and-testing-dc-os-on-aws/).
+The rights can be added on the [US West 2 AWS Console](https://console.aws.amazon.com/iam/home?region=us-west-2). The first three access rights can be assigned by searching and attaching the rights to the user. The CloudFormation managed policy is a little more tricky. The process is described in steps 4.2 and 4.3 of [my blog post on DC/OS on AWS](https://oliverveits.wordpress.com/2017/11/21/installing-and-testing-dc-os-on-aws/).
 
 ## Configure DC/OS on AWS
-Edit the file config/config.yml, if needed.
-The config.yml defaults to config.small.yml with one master, one public slave and one private slave with auto-scaling to up to two private slaves. 
+Edit the file `config/config.yml`, if needed.
+The config.yml defaults to a small installation with one master, one public slave and one private slave with auto-scaling to up to two private slaves. 
 
 ## Deploy  DC/OS on AWS:
+```
 bash entrypoint up
+```
 
 ## Show Status of deployment:
+```
 bash entrypoint stack status
+```
+Repeat this command until you see the status `CREATE_COMPLETE`. If the status does reach this state within ~15 minutes, you will need to troubleshoot the issue on the AWS Console.
 
 ## Get Console URL
 ```
@@ -98,6 +103,54 @@ See https://github.com/mesosphere/marathon-lb for documentation.
 Type 'yes'<enter> when you are being asked to continue installing.
 
 On the Web Console, you will see, that the Marathon Load Balancer is being deployed.
+
+## Make use of the API
+### Create App
+Creation of two simple apps with a single call:
+```
+$ MESOS_MASTER=$(dcos config show core.dcos_url)
+$ TOKEN=$(dcos config show core.dcos_acs_token)
+$ curl -s -X PUT -k -H "Authorization: token=$TOKEN" -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/apps" --data '[{"id":"/test/sleep60","cmd":"sleep 60","cpus":0.3,"instances":2,"mem":9,"dependencies":["/test/sleep120","/other/namespace/or/app"]},{"id":"/test/sleep120","cmd":"sleep 120","cpus":0.3,"instances":2,"mem":9}
+{"version":"2018-01-20T17:13:52.420Z","deploymentId":"4f41b278-787d-4644-aded-edc42c87c033"}[root@b99956351c4a /]]'
+```
+The status of the deployments can be seen with:
+
+```
+$ curl -s -X GET -k -H "Authorization: token=$TOKEN" -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/deployments/"
+[]
+```
+The deployment is ready already.
+
+Every 60 sec a new deployment is created:
+```
+MESOS_MASTER=$(dcos config show core.dcos_url)
+TOKEN=$(dcos config show core.dcos_acs_token)
+while true; 
+   do 
+      json=$(curl -s -X GET -k -H "Authorization: token=$TOKEN" -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/deployments/") && 
+      echo "$json" && 
+      echo "$json" | jq -r 'map(select(any(.affectedApps[]; contains("/test/sleep60")))|.id)[]' | wc -l; sleep 1; done
+```
+This will create the output:
+```
+[]
+0
+[]
+0
+[{"id":"00d2d752-c9f2-4fec-b164-279cb16c7e41","version":"2018-01-20T19:48:40.238Z","affectedApps":["/test/sleep60"],"affectedPods":[],"steps":[{"actions":[{"action":"RestartApplication","app":"/test/sleep60"}]}],"currentActions":[{"action":"RestartApplication","app":"/test/sleep60","readinessCheckResults":[]}],"currentStep":1,"totalSteps":1}]
+1
+[{"id":"00d2d752-c9f2-4fec-b164-279cb16c7e41","version":"2018-01-20T19:48:40.238Z","affectedApps":["/test/sleep60"],"affectedPods":[],"steps":[{"actions":[{"action":"RestartApplication","app":"/test/sleep60"}]}],"currentActions":[{"action":"RestartApplication","app":"/test/sleep60","readinessCheckResults":[]}],"currentStep":1,"totalSteps":1}]
+1
+[]
+0
+```
+See tasks:
+```
+MESOS_MASTER=$(dcos config show core.dcos_url)
+TOKEN=$(dcos config show core.dcos_acs_token)
+curl -s -k -H "Authorization: token=$TOKEN" -H 'Accept: text/plain' -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/tasks"
+```
+For output in json format, remove the option `-H 'Accept: text/plain'`.
 
 ## Remove DC/OS Infrastructure from AWS:
 bash entrypoint down

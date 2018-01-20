@@ -67,9 +67,15 @@ By Deploying, you agree to the Terms and Conditions https://mesosphere.com/catal
 We recommend at least 2 CPUs and 1GiB of RAM for each Marathon-LB instance.
 
 *NOTE*: For additional ```Enterprise Edition``` DC/OS instructions, see https://docs.mesosphere.com/administration/id-and-access-mgt/service-auth/mlb-auth/
+Continue installing? [yes/no] yes
+Installing Marathon app for package [marathon-lb] version [1.11.2]
+Marathon-lb DC/OS Service has been successfully installed!
+See https://github.com/mesosphere/marathon-lb for documentation.
 ```
+Type 'yes'<enter> when you are being asked to continue installing.
 
 On the Web Console, you will see, that the Marathon Load Balancer is being deployed.
+
 ## Remove DC/OS Infrastructure from AWS:
 bash entrypoint down
 

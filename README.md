@@ -1,4 +1,25 @@
 # AWS DC/OS Installer
+## Prerequisites
+### Credentials File
+Create a credentials file on `~/.aws/credentials.sh` with the content similar to:
+```
+export AWS_ACCESS_KEY_ID="YOUR_ACCESS_KEY"
+export AWS_SECRET_ACCESS_KEY="YOUR_SECRET"
+export AWS_DEFAULT_REGION=us-west-2
+```
+
+Note: The scripts work only in `AWS_DEFAULT_REGION=us-west-2`
+
+### User Permissions
+
+The user used for the tasks in this README will need following access rights:
+- AmazonEC2FullAccess
+- AmazonS3FullAccess
+- AWSCloudFormationReadOnlyAccess
+- CloudFormation (managed)
+
+The rights can be added on the [US West 2 AWS Console](https://console.aws.amazon.com/iam/home?region=us-west-2). The first three access rights can be assigned by searching and attaching the rights to the user. The CloudFormation managed policy is a little more tricky. The process is described in steps 4.2 and 4.3 of my blog on (https://oliverveits.wordpress.com/2017/11/21/installing-and-testing-dc-os-on-aws/).
+
 ## Configure DC/OS on AWS
 Edit the file config/config.yml, if needed.
 The config.yml defaults to config.small.yml with one master, one public slave and one private slave with auto-scaling to up to two private slaves. 
@@ -10,14 +31,16 @@ bash entrypoint up
 bash entrypoint stack status
 
 ## Get Console URL
+```
 CONSOLE=$(bash entrypoint stack describe | grep dcos-demo-ElasticL | awk -F '"' '{print $4}')
 echo $CONSOLE
+```
 
 ## Open Console URL in Browser
-Copy & Paste the URL in the address bar of your browser. Sign in with your favorite identity provider (Google/Github/Microsoft)
+Copy & Paste the printed URL of the previous step in the address bar of your browser. Sign in with your favorite identity provider (Google/Github/Microsoft)
 
 ## Install DCOS CLI
-Look for the DCOS CLI installation instructions in the drop-down field when clicking the upper left corner of the Console. For Linux, copy&paste the instructions on a Linux system. If your are root on a system that does not understand sudo, then the following alias might help:
+Look for the DCOS CLI installation instructions in the drop-down field when clicking the upper left corner of the Web Console. For Linux, copy&paste the instructions on a Linux system. If your are root on a system that does not understand sudo, then the following alias might help:
 ```
 alias sudo="$@"
 ```
@@ -35,7 +58,7 @@ We will retrieve the token in the next step.
 ## Configure DCOS CLI
 Log into the Browser using the cryptic URL that has been printed out in the previous step. Log in and copy the presented token to the commandline you have used in the previous step. 
 
-If this step was successful, you will see the message:
+If this step was successful, you will see the following message:
 ```
 Command line utility for the Mesosphere Datacenter Operating
 System (DC/OS). The Mesosphere DC/OS is a distributed operating
@@ -81,4 +104,9 @@ bash entrypoint down
 
 ## TODO:
 for small AMI's, the variables MasterEbsOptimized and SlaveEbsOptimized must always be false.
-See [Instance Types That Support EBS Optimization](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html#ebs-optimization-support) to see, which AMI types support EBS Optimization
+- Coupling of instance types and EBS optimization.
+  For small instance types, the variables MasterEbsOptimized and SlaveEbsOptimized must always be false, since 
+  small instance types do not support EBS optimization. In the moment, we do not verify, whether the configuration 
+  is correct, which leads to the CloudFormation Stack to be stuck in CREATE_IN_PROGRESS and a rollback after some time. 
+
+  See [Instance Types That Support EBS Optimization](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html#ebs-optimization-support) to see, which instance types support EBS Optimization

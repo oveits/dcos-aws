@@ -126,10 +126,11 @@ Every 60 sec a new deployment is created:
 MESOS_MASTER=$(dcos config show core.dcos_url)
 TOKEN=$(dcos config show core.dcos_acs_token)
 while true; 
-   do 
-      json=$(curl -s -X GET -k -H "Authorization: token=$TOKEN" -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/deployments/") && 
-      echo "$json" && 
-      echo "$json" | jq -r 'map(select(any(.affectedApps[]; contains("/test/sleep60")))|.id)[]' | wc -l; sleep 1; done
+do 
+   json=$(curl -s -X GET -k -H "Authorization: token=$TOKEN" -H 'Content-Type: application/json' "$MESOS_MASTER/service/marathon/v2/deployments/") && 
+   echo "$json" && 
+   echo "$json" | jq -r 'map(select(any(.affectedApps[]; contains("/test/sleep60")))|.id)[]' | wc -l; sleep 1; 
+done
 ```
 This will create the output:
 ```

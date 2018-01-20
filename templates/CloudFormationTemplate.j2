@@ -34,7 +34,7 @@
                 "stable": "ami-27cc7d44"
             },
             "us-west-2": {
-                "stable": "ami-2551d145"
+                "stable": "ami-444dcd24"
             }
         },
         "Parameters": {
@@ -45,16 +45,16 @@
                 "default": "10.0.0.0/22"
             },
             "SlaveInstanceType": {
-                "default": "m3.xlarge"
+                "default": "{{SlaveInstanceType}}"
             },
             "PublicSlaveInstanceType": {
-                "default": "m3.xlarge"
+                "default": "{{PublicSlaveInstanceType}}"
             },
             "StackCreationTimeout": {
                 "default": "PT45M"
             },
             "MasterInstanceType": {
-                "default": "m3.xlarge"
+                "default": "{{MasterInstanceType}}"
             },
             "VPCSubnetRange": {
                 "default": "10.0.0.0/16"
@@ -164,7 +164,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "{{MasterEbsOptimized}}",
                 "IamInstanceProfile": {
                     "Ref": "MasterInstanceProfile"
                 },
@@ -708,7 +708,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "{{SlaveEbsOptimized}}",
                 "IamInstanceProfile": {
                     "Ref": "SlaveInstanceProfile"
                 },
@@ -1416,7 +1416,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "{{PublicSlaveEbsOptimized}}",
                 "IamInstanceProfile": {
                     "Ref": "SlaveInstanceProfile"
                 },
@@ -3023,7 +3023,7 @@
                         "default"
                     ]
                 },
-                "InstanceType": "m3.medium",
+                "InstanceType": "{{NATInstanceType}}",
                 "KeyName": {
                     "Ref": "KeyName"
                 },
@@ -3201,7 +3201,7 @@
                         ]
                     },
                     "Count": {
-                        "Ref": "SlaveInstanceCount"
+                        "Ref": "SlaveInstanceCountDesired"
                     }
                 }
             },
@@ -3210,10 +3210,10 @@
                     "Ref": "SlaveInstanceCount"
                 },
                 "DesiredCapacity": {
-                    "Ref": "SlaveInstanceCount"
+                    "Ref": "SlaveInstanceCountDesired"
                 },
                 "MinSize": {
-                    "Ref": "SlaveInstanceCount"
+                    "Ref": "SlaveInstanceCountDesired"
                 },
                 "VPCZoneIdentifier": [
                     {
@@ -3254,12 +3254,17 @@
     "Parameters": {
         "SlaveInstanceCount": {
             "Description": "Required: Specify the number of private agent nodes or accept the default.",
-            "Default": "5",
+            "Default": "{{SlaveInstanceCount}}",
+            "Type": "Number"
+        },
+        "SlaveInstanceCountDesired": {
+            "Description": "Required: Specify the number of private agent nodes or accept the default.",
+            "Default": "{{SlaveInstanceCountDesired}}",
             "Type": "Number"
         },
         "PublicSlaveInstanceCount": {
             "Description": "Required: Specify the number of public agent nodes or accept the default.",
-            "Default": "1",
+            "Default": "{{PublicSlaveInstanceCount}}",
             "Type": "Number"
         },
         "OAuthEnabled": {

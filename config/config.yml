@@ -1,0 +1,10 @@
+MasterInstanceType: m3.large
+SlaveInstanceType: m3.large
+PublicSlaveInstanceType: m3.large
+NATInstanceType: m3.medium
+
+PublicSlaveInstanceCount: 1
+SlaveInstanceCountDesired: 1
+SlaveInstanceCount: 1
+MasterEbsOptimized: false
+SlaveEbsOptimized: false

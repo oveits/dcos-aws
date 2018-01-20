@@ -45,16 +45,16 @@
                 "default": "10.0.0.0/22"
             },
             "SlaveInstanceType": {
-                "default": "t2.micro"
+                "default": "m3.large"
             },
             "PublicSlaveInstanceType": {
-                "default": "t2.micro"
+                "default": "m3.large"
             },
             "StackCreationTimeout": {
                 "default": "PT45M"
             },
             "MasterInstanceType": {
-                "default": "t2.micro"
+                "default": "m3.large"
             },
             "VPCSubnetRange": {
                 "default": "10.0.0.0/16"
@@ -1416,7 +1416,7 @@
                         "stable"
                     ]
                 },
-                "EbsOptimized": "true",
+                "EbsOptimized": "",
                 "IamInstanceProfile": {
                     "Ref": "SlaveInstanceProfile"
                 },
@@ -3023,7 +3023,7 @@
                         "default"
                     ]
                 },
-                "InstanceType": "t2.micro",
+                "InstanceType": "m3.medium",
                 "KeyName": {
                     "Ref": "KeyName"
                 },
@@ -3254,7 +3254,7 @@
     "Parameters": {
         "SlaveInstanceCount": {
             "Description": "Required: Specify the number of private agent nodes or accept the default.",
-            "Default": "5",
+            "Default": "1",
             "Type": "Number"
         },
         "SlaveInstanceCountDesired": {

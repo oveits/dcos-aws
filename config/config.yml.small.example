@@ -6,5 +6,8 @@ NATInstanceType: t2.micro
 PublicSlaveInstanceCount: 1
 SlaveInstanceCountDesired: 1
 SlaveInstanceCount: 2
+
+# note: t2.micro does not support EBS Optimization. It will hang in AutoScaling Group generation, if set to true in this case
 MasterEbsOptimized: false
 SlaveEbsOptimized: false
+PublicSlaveEbsOptimized: false
